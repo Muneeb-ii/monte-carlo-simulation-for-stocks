@@ -73,10 +73,41 @@ print("Max drawdown percentiles (%): p5={:.1f}, p50={:.1f}, p95={:.1f}".format(1
 print("P(ending < {:,.0f}) = {:.1%}".format(lower_threshold, prob_below_lower))
 print("P(ending > {:,.0f}) = {:.1%}".format(upper_threshold, prob_above_upper))
 
-# Plot the results
-plt.plot(portfolio_sims)
-plt.title('Monte Carlo Simulation of Portfolio Value')
-plt.xlabel('Days')
-plt.ylabel('Portfolio Value (USD)')
+# Plot the results with percentile bands and ending distribution
+days_axis = np.arange(num_days)
+
+# Per-day percentiles across simulations
+p5_path, p50_path, p95_path = np.percentile(portfolio_sims, [5, 50, 95], axis=1)
+
+fig, (ax_left, ax_right) = plt.subplots(1, 2, figsize=(12, 5))
+
+# Left: simulated paths with bands
+ax_left.plot(days_axis, portfolio_sims, color='steelblue', alpha=0.15, linewidth=0.8)
+ax_left.plot(days_axis, p50_path, color='black', linewidth=1.8, label='Median path (p50)')
+ax_left.fill_between(days_axis, p5_path, p95_path, color='steelblue', alpha=0.2, label='5–95% band')
+
+# Ending percentile reference lines
+ax_left.axhline(p5, color='red', linestyle='--', linewidth=1, alpha=0.8, label='Ending p5')
+ax_left.axhline(p50, color='black', linestyle='--', linewidth=1, alpha=0.8, label='Ending p50')
+ax_left.axhline(p95, color='green', linestyle='--', linewidth=1, alpha=0.8, label='Ending p95')
+
+ax_left.set_title('Simulated Portfolio Paths with Percentile Bands')
+ax_left.set_xlabel('Days')
+ax_left.set_ylabel('Portfolio Value (USD)')
+ax_left.grid(True, linestyle=':', alpha=0.5)
+ax_left.legend(loc='upper left', fontsize=8)
+
+# Right: ending value distribution
+ax_right.hist(ending_values, bins=30, color='steelblue', alpha=0.7, edgecolor='white')
+ax_right.axvline(p5, color='red', linestyle='--', linewidth=1, label=f'p5 = {p5:,.0f}')
+ax_right.axvline(p50, color='black', linestyle='--', linewidth=1, label=f'p50 = {p50:,.0f}')
+ax_right.axvline(p95, color='green', linestyle='--', linewidth=1, label=f'p95 = {p95:,.0f}')
+ax_right.set_title('Ending Value Distribution')
+ax_right.set_xlabel('Ending Portfolio Value (USD)')
+ax_right.set_ylabel('Frequency')
+ax_right.grid(True, linestyle=':', alpha=0.5)
+ax_right.legend(fontsize=8)
+
+plt.tight_layout()
 plt.show()
 
