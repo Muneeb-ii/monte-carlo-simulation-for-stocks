@@ -1,4 +1,3 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import datetime as dt
@@ -30,16 +29,16 @@ num_days = 100
 mean_vec = meanReturns.values
 meanM = np.repeat(mean_vec[:, None], num_days, axis=1)
 
-portfolio_sims = np.full(shape=(num_days, num_simulations), fill_value=0.0) # create a matrix of zeros for the number of simulations and the number of days
+portfolio_sims = np.full(shape=(num_days, num_simulations), fill_value=0.0) # matrix of zeros with shape (num_days, num_simulations)
 
 initial_investment = 100000 # initial investment
 
-# We will be assuming that daily returns are distributed by a Multivariate Normal Distribution
+# Assume daily asset returns follow a multivariate normal distribution
 
 for simulation in range(num_simulations):
-    Z = np.random.normal(size=(num_days, len(weights))) # generate random numbers for the number of days and the number of assets from a standard normal distribution 
-    L = np.linalg.cholesky(covMatrix) # Cholesky Decomposition of the covariance matrix: a lower triangular matrix such that the covariance matrix is equal to the product of the transpose of the lower triangular matrix and the lower triangular matrix
-    dailyReturns = meanM + np.inner(L, Z) # daily returns are equal to the mean returns plus the product of the lower triangular matrix and the random numbers (the inner product of the two matrices)
+    Z = np.random.normal(size=(num_days, len(weights))) # standard normal shocks for each day and asset
+    L = np.linalg.cholesky(covMatrix) # Cholesky factor L of covariance where cov = L @ L.T (L is lower-triangular)
+    dailyReturns = meanM + np.inner(L, Z) # mean matrix plus correlated shocks via Cholesky (shape: assets x days)
     portfolio_sims[:,simulation] = np.cumprod(np.inner(weights, dailyReturns.T)+1)*initial_investment # cumulative product of the daily returns plus 1 (to account for the initial investment) multiplied by the initial investment
 
 plt.plot(portfolio_sims)
