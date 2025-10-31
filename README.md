@@ -86,9 +86,15 @@ pip freeze > requirements.txt
 ## Interpreting Results
 
 ### Plot
-- A fan of lines, each a simulated portfolio value over days.
-- If many lines drift up but some dive, it means typical growth with meaningful downside risk.
-- Steeper bands indicate higher volatility.
+- **Left panel — Simulated paths with percentile bands**:
+  - Light blue lines are individual simulated portfolio paths.
+  - A bold black line shows the median path (p50).
+  - A shaded band shows the 5–95% percentile range across days.
+  - Dashed horizontal reference lines mark the ending p5, p50, and p95 levels.
+- **Right panel — Ending value distribution**:
+  - Histogram of ending portfolio values across all simulations.
+  - Dashed vertical lines mark p5, p50, and p95 of ending values.
+  - Wider spread implies higher outcome uncertainty; left tail highlights downside risk.
 
 ### Summary Output (Example)
 - Ending value percentiles (USD): p5=89,500, p50=105,800, p95=124,200
