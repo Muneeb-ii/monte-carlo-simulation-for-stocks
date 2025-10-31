@@ -7,6 +7,10 @@ A simple Monte Carlo engine that:
 - simulates many plausible future paths for a portfolio,
 - and summarizes risk/return (percentiles, VaR/CVaR, drawdowns).
 
+
+## Example Output
+![Simulation Plot Placeholder](plot.png)
+
 ## Installation and Setup
 ```bash
 # 1) Clone or cd into the project
@@ -21,6 +25,8 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+---
+
 ## Usage
 ```bash
 # Run the simulation
@@ -32,7 +38,9 @@ If you update dependencies later:
 pip freeze > requirements.txt
 ```
 
-## Configuration
+---
+
+## Parameters and Customization
 - `stockTickers`: list of tickers to include. Order matters and must match your weights.
 - `lookback_days` or `startDate`/`endDate`: how much past data to learn from. Longer = more stable, shorter = more responsive.
 - `weights`: fraction of portfolio in each asset. Must sum to 1. Controls how asset moves blend into portfolio moves.
@@ -41,6 +49,7 @@ pip freeze > requirements.txt
 - `initial_investment`: starting portfolio value in USD.
 - `lower_threshold`, `upper_threshold`: targets for probability checks in the summary.
 - Confidence level (conceptual): VaR/CVaR is at 95% in the code; you can change this by editing how the percentile is computed.
+
 
 ## Methodology
 
@@ -116,10 +125,15 @@ pip freeze > requirements.txt
 - Set targets and see the probability of hitting or missing them.
 - Adjust `num_simulations` and `num_days` to your horizon and desired precision.
 
-## Limitations and Extensions
+## Limitations
 - Historical estimates may not hold in the future (regime changes, crises).
 - Normality understates tails; enhancements include fat-tailed distributions, time-varying volatility (e.g., GARCH), copulas, or bootstrapping returns.
 - Cholesky can fail if $\Sigma$ isn’t positive definite; regularization or eigen-based transforms can be used in such cases.
+
+## Extensions Planned
+- Fat-tailed distributions (t-distribution)
+- Time-varying volatility (GARCH)
+- Bootstrapped returns and correlation stress tests
 
 ## Data Source
 - Prices via Yahoo Finance using `yfinance`. Availability/quality depends on Yahoo’s data.
