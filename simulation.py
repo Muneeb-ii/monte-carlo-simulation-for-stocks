@@ -5,6 +5,16 @@ import yfinance as yf
 
 # Import data
 def get_data(tickers, start_date, end_date):
+    '''
+    Download stock data from Yahoo Finance
+    Args:
+        tickers: list of stock tickers
+        start_date: start date
+        end_date: end date
+    Returns:
+        meanReturns: mean returns
+        covMatrix: covariance matrix
+    '''
     stockData = yf.download(tickers, start=start_date, end=end_date, progress=False, threads=True)
     stockData = stockData['Close']
     returns = stockData.pct_change(fill_method=None)
